@@ -29,6 +29,8 @@ This Python workflow automates the interaction between Jira and GitHub. It retri
     JIRA_USER_EMAIL=your-email@example.com
     JIRA_API_TOKEN=your-jira-api-token
     GITHUB_TOKEN=your-github-personal-access-token
+    OPENROUTER_API_KEY=your-openrouter-key  # Optional: For AI features
+    OPENAI_API_KEY=your-openai-key          # Fallback if OpenRouter key is missing
     ```
 
 ## Usage

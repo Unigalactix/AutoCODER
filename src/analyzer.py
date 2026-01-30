@@ -1,6 +1,7 @@
-def analyze_repo(repo):
+def analyze_repo(repo, llm_handler=None):
     """
-    Analyzes the repository for language, potential security vulnerabilities (mocked), and existing workflows.
+    Analyzes the repository for language, potential security vulnerabilities, and existing workflows.
+    Uses LLM for deeper analysis if handler is provided.
     """
     analysis = {}
     
@@ -8,18 +9,34 @@ def analyze_repo(repo):
     analysis['language'] = repo.language
     
     # 2. Potential Security Vulnerabilities
-    # In a real scenario, this might interface with a scanning tool or check for specific patterns.
-    # For now, we will do a basic check for sensitive files or simply return a placeholder.
     vulnerabilities = []
+    file_contents = {}
+    
     try:
         contents = repo.get_contents("")
-        for content_file in contents:
-            if "password" in content_file.name.lower() or "secret" in content_file.name.lower():
-                 vulnerabilities.append(f"Suspicious file name found: {content_file.name}")
+        # Simple heuristic: grab specific files for LLM analysis
+        files_to_scan = [f for f in contents if f.name.endswith('.py') or f.name.endswith('.js') or f.name == 'README.md']
+        # Limit to first 3 to avoid token limits in this demo
+        for f in files_to_scan[:3]:
+            try:
+                decoded = f.decoded_content.decode('utf-8')
+                file_contents[f.name] = decoded
+            except:
+                pass
+                
+        if llm_handler and file_contents:
+            print("Sending files to LLM for analysis...")
+            llm_analysis = llm_handler.analyze_codebase(file_contents)
+            vulnerabilities.append(f"LLM Analysis:\n{llm_analysis}")
+        else:
+             # Fallback to basic check
+            for content_file in contents:
+                if "password" in content_file.name.lower() or "secret" in content_file.name.lower():
+                     vulnerabilities.append(f"Suspicious file name found: {content_file.name}")
     except Exception as e:
         vulnerabilities.append(f"Error scanning files: {e}")
         
-    analysis['vulnerabilities'] = vulnerabilities if vulnerabilities else ["No obvious suspicious filenames found in root."]
+    analysis['vulnerabilities'] = vulnerabilities if vulnerabilities else ["No obvious issues found."]
 
     # 3. Existing Workflows
     workflows = []
