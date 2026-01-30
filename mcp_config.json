@@ -1,0 +1,16 @@
+{
+    "mcpServers": {
+        "autocoder": {
+            "command": "python",
+            "args": [
+                "C:/Users/RajeshKodaganti(Quad/Downloads/GITHUB/AutoCODER/src/mcp_server.py"
+            ],
+            "env": {
+                "JIRA_BASE_URL": "...",
+                "JIRA_USER_EMAIL": "...",
+                "JIRA_API_TOKEN": "...",
+                "GITHUB_TOKEN": "..."
+            }
+        }
+    }
+}
