@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .env
 .pytest_cache/
+mcp_config.json
+mcp_config_template.json
+mcp_config.json.bak
